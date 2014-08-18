@@ -13,7 +13,8 @@
 <h3>@Model.FirstOrDefault().Pack.PackName</h3>
 
 @foreach (var item in Model) {
-    string path = string.Format("/Images/Cards/{0}/{1}.jpg", item.PackId, item.Name.ToLower());
+    string name = item.Name.Replace(" ", "").ToLower();
+    string path = string.Format("/Images/Cards/{0}/{1}.jpg", item.PackId, name);
     <img src="@path" style="height: 50%;" />
     <table>
     <tr>

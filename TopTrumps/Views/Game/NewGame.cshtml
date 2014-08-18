@@ -10,7 +10,7 @@
     
     foreach (var card in player.Hand)
     {
-        var path = string.Format("/Images/Cards/{0}/{1}.jpg", card.PackId, card.Name.ToLower());
+        var path = string.Format("/Images/Cards/{0}/{1}.jpg", card.PackId, card.Name.Replace(" ", "").ToLower());
     
         <img src="@path" style="width: 200px; padding: 20px" />
     }
