@@ -1,0 +1,75 @@
+﻿@model TopTrumps.Models.Domain.Card
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Card</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CardType)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CardType)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Strength)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Strength)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Skill)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Skill)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MagicalForce)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MagicalForce)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Weapons)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Weapons)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Power)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Power)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Pack.PackName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Pack.PackName)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

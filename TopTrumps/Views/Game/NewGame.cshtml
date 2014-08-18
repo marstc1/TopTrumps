@@ -1,0 +1,17 @@
+﻿@model List<TopTrumps.Models.Domain.Player>
+
+@{
+    ViewBag.Title = "NewGame";
+}
+
+@foreach (var player in Model)
+{
+    <h2>@player.Name</h2>
+    
+    foreach (var card in player.Hand)
+    {
+        var path = string.Format("/Images/Cards/{0}/{1}.jpg", card.PackId, card.Name.ToLower());
+    
+        <img src="@path" style="width: 200px; padding: 20px" />
+    }
+}

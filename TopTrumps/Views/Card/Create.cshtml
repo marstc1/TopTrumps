@@ -1,0 +1,92 @@
+﻿@model TopTrumps.Models.Domain.Card
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Card</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CardType)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CardType)
+            @Html.ValidationMessageFor(model => model.CardType)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Strength)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Strength)
+            @Html.ValidationMessageFor(model => model.Strength)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Skill)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Skill)
+            @Html.ValidationMessageFor(model => model.Skill)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MagicalForce)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MagicalForce)
+            @Html.ValidationMessageFor(model => model.MagicalForce)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Weapons)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Weapons)
+            @Html.ValidationMessageFor(model => model.Weapons)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Power)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Power)
+            @Html.ValidationMessageFor(model => model.Power)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PackId, "Pack")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("PackId", String.Empty)
+            @Html.ValidationMessageFor(model => model.PackId)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

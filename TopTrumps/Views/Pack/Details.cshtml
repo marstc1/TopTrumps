@@ -1,0 +1,22 @@
+﻿@model TopTrumps.Models.Domain.Pack
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Pack</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PackName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PackName)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
