@@ -6,12 +6,20 @@
 
 @foreach (var player in Model)
 {
-    <h2>@player.Name</h2>
+    <h2>@player.Name (@player.Hand.Count())</h2>
     
-    foreach (var card in player.Hand)
+    <h1>@ViewBag.Message</h1>
+    
+    <div class="cardContainer">
+    <img src="@string.Format("/Images/Cards/{0}/cover.jpg", player.Hand.FirstOrDefault().PackId)" class="card" />
+    <img src="@string.Format("/Images/Cards/{0}/back.jpg", player.Hand.FirstOrDefault().PackId)" class="card" />
+
+    @foreach (var card in player.Hand)
     {
         var path = string.Format("/Images/Cards/{0}/{1}.jpg", card.PackId, card.Name.Replace(" ", "").ToLower());
     
-        <img src="@path" style="width: 200px; padding: 20px" />
+        <img src="@path" class="hidden card" />
     }
+
+    </div>
 }

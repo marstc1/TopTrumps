@@ -1,0 +1,12 @@
+﻿.card {
+    width: 190px;
+    padding: 10px;
+}
+
+.hidden {
+    display: inline;
+}
+
+.hidden:first-child {
+    display: inline;
+}
