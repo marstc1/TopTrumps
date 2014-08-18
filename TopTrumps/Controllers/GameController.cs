@@ -47,14 +47,14 @@ namespace TopTrumps.Controllers
                 var card = players[0].Hand.FirstOrDefault();
                 players[0].Hand.Remove(card);
                 players[1].Hand.Add(card);
-                ViewBag.Message = string.Format("{1} wins", players[1].Name);
+                ViewBag.Message = string.Format("{0} wins", players[1].Name);
             }
             else if (players[0].Hand.FirstOrDefault().Strength > players[1].Hand.FirstOrDefault().Strength)
             {
                 var card = players[1].Hand.FirstOrDefault();
                 players[1].Hand.Remove(card);
                 players[0].Hand.Add(card);
-                ViewBag.Message = string.Format("{0} wins", players[1].Name);
+                ViewBag.Message = string.Format("{0} wins", players[0].Name);
             }
             
             return View(players);
