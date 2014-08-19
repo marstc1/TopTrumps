@@ -355,6 +355,7 @@
     <Content Include="Views\Pack\Delete.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
     <Content Include="Views\Game\NewGame.cshtml" />
+    <Content Include="Views\Game\Wins.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
