@@ -8,6 +8,8 @@ using TopTrumps.Models.Domain;
 
 namespace TopTrumps.Controllers
 {
+    using TopTrumps.Models.ViewModels;
+
     public class GameController : Controller
     {
         //
@@ -42,9 +44,15 @@ namespace TopTrumps.Controllers
                 }
             }
 
-            this.HttpContext.Session["players"] = players;
+            var httpSessionStateBase = this.HttpContext.Session;
+            if (httpSessionStateBase != null)
+            {
+                httpSessionStateBase["players"] = players;
+            }
 
-            return View(players);
+            var gameViewModel = new GameViewModel(players);
+
+            return View("Game", gameViewModel);
         }
 
         [HttpPost]
@@ -84,7 +92,8 @@ namespace TopTrumps.Controllers
 
                 httpSessionStateBase["players"] = players;
 
-                return this.View(players);
+                var gameViewModel = new GameViewModel(players);
+                return View("Game", gameViewModel);
             }
 
             return this.RedirectToAction("NewGame");
