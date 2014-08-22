@@ -1,7 +1,4 @@
-﻿using System.Web;
-using TopTrumps.Helpers;
-
-namespace TopTrumps.Models.ViewModels
+﻿namespace TopTrumps.Models.ViewModels
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -16,11 +13,6 @@ namespace TopTrumps.Models.ViewModels
 
         public Card PlayersCurrentCard { get; set; }
 
-        public string PlayersCurrentCardImagePath
-        {
-            get { return string.Format("/Images/Cards/{0}/{1}.jpg", PlayersCurrentCard.PackId, PlayersCurrentCard.Name.ToLower()); }
-        }
-
         public string SelectedOption { get; set; }
 
         public int ComputersNumberOfCards { get; set; }
@@ -32,20 +24,6 @@ namespace TopTrumps.Models.ViewModels
             this.PlayersCurrentCard = players[0].Hand.FirstOrDefault();
 
             this.ComputersNumberOfCards = players[1].Hand.Count;
-        }
-
-        public GameViewModel(GameDetails gameDetails)
-        {
-            this.PlayersName = gameDetails.Players[0].Name;
-            this.PlayersNumberOfCards = gameDetails.Players[0].Hand.Count;
-            this.PlayersCurrentCard = gameDetails.Players[0].Hand.FirstOrDefault();
-
-            this.ComputersNumberOfCards = gameDetails.Players[1].Hand.Count;
-        }
-
-        public GameViewModel(HttpContextBase httpContext)
-        {
-            var gameHelper = new GameHelper(httpContext);
         }
     }
 }

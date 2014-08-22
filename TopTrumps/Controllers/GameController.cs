@@ -1,120 +1,107 @@
-﻿using Microsoft.Ajax.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 using TopTrumps.Helpers;
+using TopTrumps.Models.Domain;
 
 namespace TopTrumps.Controllers
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web.Mvc;
-    using TopTrumps.Models.Domain;
     using TopTrumps.Models.ViewModels;
-    using TopTrumps.Models.ViewModels.Game;
 
-    /// <summary>
-    /// The Game Controller Class
-    /// </summary>
     public class GameController : Controller
     {
-        private GameHelper gameHelper;
+        //
+        // GET: /Game/
 
-        public GameController()
-        {
-            gameHelper = new GameHelper(this.HttpContext);
-        }
-        /// <summary>
-        /// The Game controller Index action method
-        /// </summary>
-        /// <returns>The landing page for the Game Controller action methods</returns>
         public ActionResult Index()
         {
-            var viewModel = new GameIndexViewModel();
-
-            return this.View(viewModel);
+            return View();
         }
 
-        /// <summary>
-        /// Indexes the specified view model.
-        /// </summary>
-        /// <param name="viewModel">The view model.</param>
-        /// <returns>The landing page for the Game Controller action methods</returns>
+        public ActionResult NewGame()
+        {
+            var deck = new Deck(1);
+            deck.Shuffle();
+            
+            var players = new List<Player>
+                {
+                    new Player { Id = 0, Name = "Guest"},
+                    new Player { Id = 1, Name = "Computer" }
+                };
+
+            var packHelper = new PackHelper();
+
+            while (deck.Cards.Count() > 0)
+            {
+                foreach (var player in players)
+                {
+                    if (deck.Cards.Count() > 0)
+                    {
+                        player.Hand.Add(deck.TakeCard());
+                    }
+                }
+            }
+
+            var httpSessionStateBase = this.HttpContext.Session;
+            if (httpSessionStateBase != null)
+            {
+                httpSessionStateBase["players"] = players;
+            }
+
+            var gameViewModel = new GameViewModel(players);
+
+            return View("Game", gameViewModel);
+        }
+
         [HttpPost]
-        public ActionResult Index(GameIndexViewModel viewModel)
+        public ActionResult NewGame(string selectedOption)
         {
-            var gameDetails = new GameDetails(viewModel.PlayerName, viewModel.PackId);
-
-            gameHelper.SaveGameDetails(gameDetails);
-
-            return this.RedirectToAction("PlayGame");
-        }
-        
-        /// <summary>
-        /// Plays the game.
-        /// </summary>
-        /// <returns>The play game view</returns>
-        public ActionResult PlayGame()
-        {
-            var gameViewModel = new GameViewModel(gameHelper.GetGameDetails());
-            
-            return this.View(gameViewModel);
-        }
-
-        /// <summary>
-        /// Plays the game.
-        /// </summary>
-        /// <param name="gameViewModel">The game view model.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult PlayGame(GameViewModel gameViewModel)
-        {
-            var gameDetails = gameHelper.GetGameDetails();
-
-            var playersCard = gameDetails.Players[0].Hand.FirstOrDefault();
-            var computersCard = gameDetails.Players[1].Hand.FirstOrDefault();
-
-            if (playersCard == null && computersCard == null)
+            var httpSessionStateBase = this.HttpContext.Session;
+            if (httpSessionStateBase != null)
             {
-                return this.RedirectToAction("GameOver");
+                var players = (List<Player>)httpSessionStateBase["players"];
+
+                var player1 = players[0];
+                var computer = players[1];
+
+                var playersCard = player1.Hand.FirstOrDefault();
+                var computersCard = computer.Hand.FirstOrDefault();
+
+                if (playersCard == null || computersCard == null)
+                {
+                    return this.RedirectToAction("Wins");
+                }
+
+                player1.Hand.Remove(playersCard);
+                computer.Hand.Remove(computersCard);
+
+                if (playersCard.Strength > computersCard.Strength)
+                {
+                    player1.Hand.Add(playersCard);
+                    player1.Hand.Add(computersCard);
+                    this.ViewBag.Message = string.Format("{0} wins", player1.Name);
+                }
+                else if (playersCard.Strength < computersCard.Strength)
+                {
+                    computer.Hand.Add(playersCard);
+                    computer.Hand.Add(computersCard);
+                    this.ViewBag.Message = string.Format("{0} wins", computer.Name);
+                }
+
+                httpSessionStateBase["players"] = players;
+
+                var gameViewModel = new GameViewModel(players);
+                return View("Game", gameViewModel);
             }
 
-            gameDetails.CardsInPlay.Add(playersCard);
-            gameDetails.CardsInPlay.Add(computersCard);
-
-            if (computersCard == null || playersCard == null) return this.View(gameViewModel);
-            
-            if (playersCard.Strength > computersCard.Strength)
-            {
-                gameDetails.Players[0].Hand.AddRange(gameDetails.CardsInPlay);
-                gameDetails.CardsInPlay = new List<Card>();
-            }
-            
-            if (playersCard.Strength < computersCard.Strength)
-            {
-                gameDetails.Players[1].Hand.AddRange(gameDetails.CardsInPlay);
-                gameDetails.CardsInPlay = new List<Card>();
-            }
-
-            gameHelper.SaveGameDetails(gameDetails);
-
-
-            return this.View(gameViewModel);
+            return this.RedirectToAction("NewGame");
         }
 
-        /// <summary>
-        /// The game over action method.
-        /// </summary>
-        /// <returns>The game over view.</returns>
-        public ActionResult GameOver()
+        public ActionResult Wins()
         {
-            var gameDetails = gameHelper.GetGameDetails();
-
-            var winner = gameDetails.Players.FirstOrDefault();
-
-            foreach (var player in gameDetails.Players.Where(player => player.Hand.Count > winner.Hand.Count))
-            {
-                winner = player;
-            }
-
-            return this.View(winner);
+            return this.View();
         }
     }
 }
