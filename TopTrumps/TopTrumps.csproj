@@ -190,6 +190,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GameHelper.cs" />
     <Compile Include="Helpers\PackHelper.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Domain\Card.cs" />
@@ -360,6 +361,8 @@
     <Content Include="Views\Game\NewGame.cshtml" />
     <Content Include="Views\Game\Wins.cshtml" />
     <Content Include="Views\Game\Game.cshtml" />
+    <Content Include="Views\Game\PlayGame.cshtml" />
+    <Content Include="Views\Game\GameOver.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

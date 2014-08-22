@@ -1,0 +1,42 @@
+﻿@model TopTrumps.Models.ViewModels.GameViewModel
+
+@{
+    ViewBag.Title = "PlayGame";
+}
+
+<h2>PlayGame</h2>
+
+@using (@Html.BeginForm("PlayGame", "Game", FormMethod.Post))
+{
+    <img src="@Model.PlayersCurrentCardImagePath" class="card" />
+    
+    <h2>@Html.DisplayFor(x => x.PlayersCurrentCard.CardType)</h2>
+    <h3>@Html.DisplayFor(x => x.PlayersCurrentCard.Name)</h3>
+
+    <table style="width: 100%;">
+        <tr>
+            <td>@Html.LabelFor(x => x.PlayersCurrentCard.Strength)</td>
+            <td>@Html.DisplayFor(x =>x.PlayersCurrentCard.Strength)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.PlayersCurrentCard.Skill)</td>
+            <td>@Html.DisplayFor(x => x.PlayersCurrentCard.Skill)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.PlayersCurrentCard.MagicalForce)</td>
+            <td>@Html.DisplayFor(x => x.PlayersCurrentCard.MagicalForce)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.PlayersCurrentCard.Weapons)</td>
+            <td>@Html.DisplayFor(x => x.PlayersCurrentCard.Weapons)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.PlayersCurrentCard.Power)</td>
+            <td>@Html.DisplayFor(x => x.PlayersCurrentCard.Power)</td>
+        </tr>
+    </table>
+    
+    <input id="PlayCard" type="submit" value="Go" />
+    
+    <h1>@Model.PlayersName (@Model.PlayersNumberOfCards) VS Computer (@Model.ComputersNumberOfCards)</h1>
+}
