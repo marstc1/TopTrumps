@@ -25,5 +25,14 @@
 
             this.ComputersNumberOfCards = players[1].Hand.Count;
         }
+
+        public GameViewModel(GameDetails gameDetails)
+        {
+            this.PlayersName = gameDetails.Players[0].Name;
+            this.PlayersNumberOfCards = gameDetails.Players[0].Hand.Count;
+            this.PlayersCurrentCard = gameDetails.Players[0].Hand.FirstOrDefault();
+
+            this.ComputersNumberOfCards = gameDetails.Players[1].Hand.Count;
+        }
     }
 }

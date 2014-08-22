@@ -198,6 +198,7 @@
     <Compile Include="Models\Domain\Player.cs" />
     <Compile Include="Models\TopTrumpsContext.cs" />
     <Compile Include="Models\ViewModels\GameViewModel.cs" />
+    <Compile Include="Models\ViewModels\Game\GameIndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

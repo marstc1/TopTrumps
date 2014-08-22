@@ -1,7 +1,17 @@
-﻿@{
+﻿@model TopTrumps.Models.ViewModels.Game.GameIndexViewModel
+
+@{
     ViewBag.Title = "Index";
 }
 
 <h2>Game</h2>
+@using (Html.BeginForm())
+{
+    @Html.EditorFor(model => model.PlayerName)
+    
+    @Html.EditorFor(model => model.PackId)
 
-@Html.ActionLink("New Game", "NewGame")
+    @Html.EditorFor(model => model.Difficulty)
+
+    <input type="submit" value="Play" />
+}
