@@ -24,18 +24,18 @@ namespace TopTrumps.Controllers
         {
             var deck = new Deck(1);
             deck.Shuffle();
-            
-            var players = new List<Player>
+
+            var gameData = new Game();
+
+            gameData.Players = new List<Player>
                 {
                     new Player { Id = 0, Name = "Guest"},
                     new Player { Id = 1, Name = "Computer" }
                 };
 
-            var packHelper = new PackHelper();
-
             while (deck.Cards.Count() > 0)
             {
-                foreach (var player in players)
+                foreach (var player in gameData.Players)
                 {
                     if (deck.Cards.Count() > 0)
                     {
@@ -47,10 +47,10 @@ namespace TopTrumps.Controllers
             var httpSessionStateBase = this.HttpContext.Session;
             if (httpSessionStateBase != null)
             {
-                httpSessionStateBase["players"] = players;
+                httpSessionStateBase["gameData"] = gameData;
             }
 
-            var gameViewModel = new GameViewModel(players);
+            var gameViewModel = new GameViewModel(gameData.Players);
 
             return View("Game", gameViewModel);
         }
@@ -61,7 +61,9 @@ namespace TopTrumps.Controllers
             var httpSessionStateBase = this.HttpContext.Session;
             if (httpSessionStateBase != null)
             {
-                var players = (List<Player>)httpSessionStateBase["players"];
+                var gameData = (Game)httpSessionStateBase["gameData"];
+
+                var players = gameData.Players;
 
                 var player1 = players[0];
                 var computer = players[1];
@@ -77,20 +79,21 @@ namespace TopTrumps.Controllers
                 player1.Hand.Remove(playersCard);
                 computer.Hand.Remove(computersCard);
 
+                gameData.CardsInPlay.Add(playersCard);
+                gameData.CardsInPlay.Add(computersCard);
+
                 if (playersCard.Strength > computersCard.Strength)
                 {
-                    player1.Hand.Add(playersCard);
-                    player1.Hand.Add(computersCard);
-                    this.ViewBag.Message = string.Format("{0} wins", player1.Name);
+                    player1.Hand.AddRange(gameData.CardsInPlay);
+                    gameData.CardsInPlay.Clear();
                 }
                 else if (playersCard.Strength < computersCard.Strength)
                 {
-                    computer.Hand.Add(playersCard);
-                    computer.Hand.Add(computersCard);
-                    this.ViewBag.Message = string.Format("{0} wins", computer.Name);
+                    computer.Hand.AddRange(gameData.CardsInPlay);
+                    gameData.CardsInPlay.Clear();
                 }
 
-                httpSessionStateBase["players"] = players;
+                httpSessionStateBase["gameData"] = gameData;
 
                 var gameViewModel = new GameViewModel(players);
                 return View("Game", gameViewModel);

@@ -194,6 +194,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Domain\Card.cs" />
     <Compile Include="Models\Domain\Deck.cs" />
+    <Compile Include="Models\Domain\Game.cs" />
     <Compile Include="Models\Domain\Pack.cs" />
     <Compile Include="Models\Domain\Player.cs" />
     <Compile Include="Models\TopTrumpsContext.cs" />
