@@ -18,23 +18,12 @@ namespace TopTrumps.Models.Domain
             this.Hand = new List<Card>();
         }
 
-        public bool IsWinner()
+        public bool IsOut
         {
-            if (this.Hand.Count() >= 30)
+            get
             {
-                return true;
+                return !this.Hand.Any();
             }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether the player is out.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsOut()
-        {
-            return !this.Hand.Any();
         }
     }
 }

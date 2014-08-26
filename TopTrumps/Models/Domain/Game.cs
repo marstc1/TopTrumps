@@ -61,7 +61,7 @@ namespace TopTrumps.Models.Domain
         {
             get
             {
-                return this.Players.Count(x => x.Hand != null) == 1;
+                return this.Players.Count(player => !player.IsOut) <= 1;
             }
         }
 
@@ -85,28 +85,40 @@ namespace TopTrumps.Models.Domain
         /// </summary>
         public void CompareCards()
         {
-            foreach (var player in this.Players.Where(player => !player.IsOut()))
+            var playersInGame = Players.Where(player => !player.IsOut).ToList();
+
+            var cardsToCompare = playersInGame.Select(player => player.Hand.First()).ToList();
+
+            var winningValue = cardsToCompare.Max(x => x.Strength);
+
+            var isWinningCard = cardsToCompare.Count(x => x.Strength == winningValue) == 1;
+
+            if (isWinningCard)
             {
-                this.CardsInPlay.Add(player.Hand.First());
-            }
+                var winningCard = cardsToCompare.First(x => x.Strength == winningValue);
+                var winningPlayer = Players.First(x => x.Hand.Contains(winningCard));
 
-            var highestValue = this.CardsInPlay.Max(x => x.Strength);
-
-            try
-            {
-                var winningCard = this.CardsInPlay.Single(x => x.Strength == highestValue);
-                var winningPlayer = this.Players.Single(x => x.Hand.Contains(winningCard));
-
-                foreach (var player in this.Players)
+                foreach (var player in playersInGame)
                 {
-                    player.Hand.Remove(player.Hand.FirstOrDefault());
+                    var playersCard = player.Hand.First();
+                    player.Hand.Remove(playersCard);
+                    winningPlayer.Hand.Add(playersCard);
                 }
 
-                winningPlayer.Hand.AddRange(this.CardsInPlay);
+                if (CardsInPlay.Count > 0)
+                {
+                    winningPlayer.Hand.AddRange(CardsInPlay);
+                    CardsInPlay.Clear();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                
+                foreach (var player in playersInGame)
+                {
+                    var playersCard = player.Hand.First();
+                    player.Hand.Remove(playersCard);
+                    this.CardsInPlay.Add(playersCard);
+                }
             }
         }
 

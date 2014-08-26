@@ -17,6 +17,8 @@ namespace TopTrumps.Controllers
 
         public ActionResult NewGame()
         {
+            this.game = new Game();
+            
             var viewModel = new NewGameViewModel();
 
             return this.View(viewModel);
