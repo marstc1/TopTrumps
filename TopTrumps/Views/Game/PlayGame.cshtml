@@ -1,0 +1,18 @@
+﻿@model TopTrumps.Models.ViewModels.GameViewModel
+
+@{
+    ViewBag.Title = "NewGame";
+}
+
+@using (Html.BeginForm(IsPost))
+{
+    <input type="submit" value="Go" />
+    
+    <h1>@Model.PlayersName (@Model.PlayersNumberOfCards)</h1>
+    
+    var path = string.Format("/Images/Cards/{0}/{1}.jpg", @Model.PlayersCurrentCard.PackId, @Model.PlayersCurrentCard.Name.Replace(" ", "").ToLower());
+    
+    <img src="@path" class="card" />
+    
+    <h1>Computer (@Model.ComputersNumberOfCards)</h1>
+}

@@ -18,7 +18,7 @@ namespace TopTrumps.Models.Domain
             this.Hand = new List<Card>();
         }
 
-        public bool Wins()
+        public bool IsWinner()
         {
             if (this.Hand.Count() >= 30)
             {

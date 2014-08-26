@@ -1,15 +1,15 @@
 ﻿
 namespace TopTrumps.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
     using TopTrumps.Models.Domain;
     using TopTrumps.Models.ViewModels;
+    using TopTrumps.Models.ViewModels.Game;
 
     public class GameController : Controller
     {
-        public GameData GameData { get; set; }
+        private Game game;
         
         public ActionResult Index()
         {
@@ -18,101 +18,66 @@ namespace TopTrumps.Controllers
 
         public ActionResult NewGame()
         {
-            GameData.Players = new List<Player>
-                {
-                    new Player { Id = 0, Name = "Guest"},
-                    new Player { Id = 1, Name = "Computer" }
-                };
+            var viewModel = new NewGameViewModel();
 
-            var deck = new Deck(1);
-            deck.Shuffle();
-
-            while (deck.Cards.Count() > 0)
-            {
-                foreach (var player in GameData.Players)
-                {
-                    if (deck.Cards.Count() > 0)
-                    {
-                        player.Hand.Add(deck.TakeCard());
-                    }
-                }
-            }
-
-            var gameViewModel = new GameViewModel(GameData.Players);
-
-            return View("Game", gameViewModel);
+            return this.View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult NewGame(string selectedOption)
+        public ActionResult NewGame(NewGameViewModel viewModel)
         {
-            GameData = this.CompareCard(GameData);
-
-            this.SaveGameData(GameData);
-
-            if (GameData.GameOver)
+            if (this.ModelState.IsValid)
             {
-                return this.RedirectToAction("Wins");
+                this.game.Start(viewModel.PlayerName);
+
+                return RedirectToAction("PlayGame");
             }
 
-            var gameViewModel = new GameViewModel(GameData.Players);
-
-            return this.View("Game", gameViewModel);
+            return this.View(viewModel);
         }
 
-        public ActionResult Wins()
+        public ActionResult PlayGame()
+        {
+            var gameViewModel = new GameViewModel(this.game.Players);
+
+            return this.View(gameViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult PlayGame(string selectedOption)
+        {
+            this.game.CompareCards();
+
+            if (this.game.GameOver)
+            {
+                return this.RedirectToAction("GameOver");
+            }
+
+            var gameViewModel = new GameViewModel(this.game.Players);
+
+            return this.View(gameViewModel);
+        }
+
+        public ActionResult GameOver()
         {
             return this.View();
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            this.GameData = this.GetGameData();
+            this.game = this.GetGameData();
             
             base.OnActionExecuting(filterContext);
         }
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            this.SaveGameData(GameData);
+            this.SaveGameData(game);
             
             base.OnActionExecuted(filterContext);
         }
 
-        private GameData CompareCard(GameData gameData)
-        {
-            var playersCard = gameData.Players[0].Hand.FirstOrDefault();
-            var computersCard = gameData.Players[1].Hand.FirstOrDefault();
-
-            if (playersCard == null || computersCard == null)
-            {
-                gameData.GameOver = true;
-            }
-            else
-            {
-                gameData.CardsInPlay.Add(playersCard);
-                gameData.CardsInPlay.Add(computersCard);
-
-                gameData.Players[0].Hand.Remove(playersCard);
-                gameData.Players[1].Hand.Remove(computersCard);
-
-                if (playersCard.Strength > computersCard.Strength)
-                {
-                    gameData.Players[0].Hand.AddRange(gameData.CardsInPlay);
-                    gameData.CardsInPlay.Clear();
-                }
-
-                if (playersCard.Strength < computersCard.Strength)
-                {
-                    gameData.Players[1].Hand.AddRange(gameData.CardsInPlay);
-                    gameData.CardsInPlay.Clear();
-                }
-            }
-
-            return gameData;
-        }
-
-        private GameData SaveGameData(GameData gameData)
+        private Game SaveGameData(Game gameData)
         {
             if (this.HttpContext.Session != null)
             {
@@ -122,16 +87,16 @@ namespace TopTrumps.Controllers
             return gameData;
         }
 
-        private GameData GetGameData()
+        private Game GetGameData()
         {
             if (this.HttpContext.Session == null)
             {
-                return new GameData();
+                return new Game();
             }
 
-            var gameData = (GameData)this.HttpContext.Session["gameData"];
+            var gameData = (Game)this.HttpContext.Session["gameData"];
 
-            return gameData ?? new GameData();
+            return gameData ?? new Game();
         }
     }
 }
