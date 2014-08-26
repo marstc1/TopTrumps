@@ -9,6 +9,8 @@ namespace TopTrumps.Controllers
 
     public class GameController : Controller
     {
+        public GameData GameData { get; set; }
+        
         public ActionResult Index()
         {
             return View();
@@ -16,9 +18,7 @@ namespace TopTrumps.Controllers
 
         public ActionResult NewGame()
         {
-            var gameData = new GameData();
-
-            gameData.Players = new List<Player>
+            GameData.Players = new List<Player>
                 {
                     new Player { Id = 0, Name = "Guest"},
                     new Player { Id = 1, Name = "Computer" }
@@ -29,7 +29,7 @@ namespace TopTrumps.Controllers
 
             while (deck.Cards.Count() > 0)
             {
-                foreach (var player in gameData.Players)
+                foreach (var player in GameData.Players)
                 {
                     if (deck.Cards.Count() > 0)
                     {
@@ -38,9 +38,7 @@ namespace TopTrumps.Controllers
                 }
             }
 
-            this.SaveGameData(gameData);
-
-            var gameViewModel = new GameViewModel(gameData.Players);
+            var gameViewModel = new GameViewModel(GameData.Players);
 
             return View("Game", gameViewModel);
         }
@@ -48,18 +46,16 @@ namespace TopTrumps.Controllers
         [HttpPost]
         public ActionResult NewGame(string selectedOption)
         {
-            var gameData = this.GetGameData();
+            GameData = this.CompareCard(GameData);
 
-            gameData = this.CompareCard(gameData);
+            this.SaveGameData(GameData);
 
-            this.SaveGameData(gameData);
-
-            if (gameData.GameOver)
+            if (GameData.GameOver)
             {
                 return this.RedirectToAction("Wins");
             }
 
-            var gameViewModel = new GameViewModel(gameData.Players);
+            var gameViewModel = new GameViewModel(GameData.Players);
 
             return this.View("Game", gameViewModel);
         }
@@ -67,6 +63,20 @@ namespace TopTrumps.Controllers
         public ActionResult Wins()
         {
             return this.View();
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            this.GameData = this.GetGameData();
+            
+            base.OnActionExecuting(filterContext);
+        }
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            this.SaveGameData(GameData);
+            
+            base.OnActionExecuted(filterContext);
         }
 
         private GameData CompareCard(GameData gameData)
@@ -114,12 +124,14 @@ namespace TopTrumps.Controllers
 
         private GameData GetGameData()
         {
-            if (this.HttpContext.Session != null)
+            if (this.HttpContext.Session == null)
             {
-                return (GameData)this.HttpContext.Session["gameData"];
+                return new GameData();
             }
 
-            return new GameData();
+            var gameData = (GameData)this.HttpContext.Session["gameData"];
+
+            return gameData ?? new GameData();
         }
     }
 }
