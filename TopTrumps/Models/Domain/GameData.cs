@@ -5,15 +5,18 @@ using System.Web;
 
 namespace TopTrumps.Models.Domain
 {
-    public class Game
+    public class GameData
     {
-        public Game()
+        public GameData()
         {
             this.CardsInPlay = new List<Card>();
+            this.GameOver = false;
         }
         
         public List<Player> Players { get; set; }
 
         public List<Card> CardsInPlay { get; set; }
+
+        public bool GameOver { get; set; }
     }
 }
