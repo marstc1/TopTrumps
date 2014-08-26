@@ -27,5 +27,14 @@ namespace TopTrumps.Models.Domain
 
             return false;
         }
+
+        /// <summary>
+        /// Determines whether the player is out.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOut()
+        {
+            return !this.Hand.Any();
+        }
     }
 }

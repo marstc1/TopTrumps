@@ -1,7 +1,6 @@
 ﻿
 namespace TopTrumps.Controllers
 {
-    using System.Linq;
     using System.Web.Mvc;
     using TopTrumps.Models.Domain;
     using TopTrumps.Models.ViewModels;

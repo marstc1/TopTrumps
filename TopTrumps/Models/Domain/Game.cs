@@ -1,6 +1,7 @@
 ﻿
 namespace TopTrumps.Models.Domain
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -26,7 +27,6 @@ namespace TopTrumps.Models.Domain
         {
             this.players = new List<Player> { new Player { Name = "Computer" } };
             this.CardsInPlay = new List<Card>();
-            this.GameOver = false;
         }
 
         /// <summary>
@@ -52,12 +52,18 @@ namespace TopTrumps.Models.Domain
         public List<Card> CardsInPlay { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [game over].
+        /// Gets a value indicating whether [game over].
         /// </summary>
         /// <value>
         ///   <c>true</c> if [game over]; otherwise, <c>false</c>.
         /// </value>
-        public bool GameOver { get; set; }
+        public bool GameOver
+        {
+            get
+            {
+                return this.Players.Count(x => x.Hand != null) == 1;
+            }
+        }
 
         /// <summary>
         /// Starts the game.
@@ -79,32 +85,28 @@ namespace TopTrumps.Models.Domain
         /// </summary>
         public void CompareCards()
         {
-            var computersCard = this.Players[0].Hand.FirstOrDefault();
-            var playersCard = this.Players[1].Hand.FirstOrDefault();
-
-            if (this.Players.Any(x => x.Hand == null))
+            foreach (var player in this.Players.Where(player => !player.IsOut()))
             {
-                this.GameOver = true;
+                this.CardsInPlay.Add(player.Hand.First());
             }
-            else
+
+            var highestValue = this.CardsInPlay.Max(x => x.Strength);
+
+            try
             {
-                this.CardsInPlay.Add(playersCard);
-                this.CardsInPlay.Add(computersCard);
+                var winningCard = this.CardsInPlay.Single(x => x.Strength == highestValue);
+                var winningPlayer = this.Players.Single(x => x.Hand.Contains(winningCard));
 
-                this.Players[1].Hand.Remove(playersCard);
-                this.Players[0].Hand.Remove(computersCard);
-
-                if (playersCard.Strength > computersCard.Strength)
+                foreach (var player in this.Players)
                 {
-                    this.Players[1].Hand.AddRange(this.CardsInPlay);
-                    this.CardsInPlay.Clear();
+                    player.Hand.Remove(player.Hand.FirstOrDefault());
                 }
 
-                if (playersCard.Strength < computersCard.Strength)
-                {
-                    this.Players[0].Hand.AddRange(this.CardsInPlay);
-                    this.CardsInPlay.Clear();
-                }
+                winningPlayer.Hand.AddRange(this.CardsInPlay);
+            }
+            catch (Exception ex)
+            {
+                
             }
         }
 

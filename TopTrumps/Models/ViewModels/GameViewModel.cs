@@ -19,11 +19,11 @@
 
         public GameViewModel(List<Player> players)
         {
-            this.PlayersName = players[0].Name;
-            this.PlayersNumberOfCards = players[0].Hand.Count;
-            this.PlayersCurrentCard = players[0].Hand.FirstOrDefault();
+            this.PlayersName = players[1].Name;
+            this.PlayersNumberOfCards = players[1].Hand.Count;
+            this.PlayersCurrentCard = players[1].Hand.FirstOrDefault();
 
-            this.ComputersNumberOfCards = players[1].Hand.Count;
+            this.ComputersNumberOfCards = players[0].Hand.Count;
         }
     }
 }

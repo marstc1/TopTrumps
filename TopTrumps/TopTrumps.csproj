@@ -359,7 +359,6 @@
     <Content Include="Views\Game\Index.cshtml" />
     <Content Include="Views\Game\NewGame.cshtml" />
     <Content Include="Views\Game\GameOver.cshtml" />
-    <Content Include="Views\Game\Game.cshtml" />
     <Content Include="Views\Game\PlayGame.cshtml" />
   </ItemGroup>
   <ItemGroup>
