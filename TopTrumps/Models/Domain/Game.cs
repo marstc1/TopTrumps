@@ -1,7 +1,14 @@
-﻿
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Game.cs" company="KSS">
+//   1997 - 2014
+// </copyright>
+// <summary>
+//   The game class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace TopTrumps.Models.Domain
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -11,14 +18,14 @@ namespace TopTrumps.Models.Domain
     public class Game
     {
         /// <summary>
+        /// The players
+        /// </summary>
+        private readonly List<Player> players; 
+
+        /// <summary>
         /// The deck
         /// </summary>
         private Deck deck;
-
-        /// <summary>
-        /// The players
-        /// </summary>
-        private List<Player> players; 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
@@ -85,7 +92,7 @@ namespace TopTrumps.Models.Domain
         /// </summary>
         public void CompareCards()
         {
-            var playersInGame = Players.Where(player => !player.IsOut).ToList();
+            var playersInGame = this.Players.Where(player => !player.IsOut).ToList();
 
             var cardsToCompare = playersInGame.Select(player => player.Hand.First()).ToList();
 
@@ -96,20 +103,11 @@ namespace TopTrumps.Models.Domain
             if (isWinningCard)
             {
                 var winningCard = cardsToCompare.First(x => x.Strength == winningValue);
-                var winningPlayer = Players.First(x => x.Hand.Contains(winningCard));
+                var winningPlayer = this.Players.First(x => x.Hand.Contains(winningCard));
 
-                foreach (var player in playersInGame)
-                {
-                    var playersCard = player.Hand.First();
-                    player.Hand.Remove(playersCard);
-                    winningPlayer.Hand.Add(playersCard);
-                }
+                this.SetPlayerInControl(winningPlayer);
 
-                if (CardsInPlay.Count > 0)
-                {
-                    winningPlayer.Hand.AddRange(CardsInPlay);
-                    CardsInPlay.Clear();
-                }
+                this.CollectCards(winningPlayer);
             }
             else
             {
@@ -141,6 +139,42 @@ namespace TopTrumps.Models.Domain
                         player.Hand.Add(this.deck.TakeCard());
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sets the player in control.
+        /// </summary>
+        /// <param name="winningPlayer">The winning player.</param>
+        private void SetPlayerInControl(Player winningPlayer)
+        {
+            foreach (var player in this.Players)
+            {
+                player.InControlOfGame = false;
+            }
+
+            winningPlayer.InControlOfGame = true;
+        }
+
+        /// <summary>
+        /// Collects the cards.
+        /// </summary>
+        /// <param name="winningPlayer">The winning player.</param>
+        private void CollectCards(Player winningPlayer)
+        {
+            var playersInGame = this.Players.Where(player => !player.IsOut).ToList();
+            
+            foreach (var player in playersInGame)
+            {
+                var playersCard = player.Hand.First();
+                player.Hand.Remove(playersCard);
+                winningPlayer.Hand.Add(playersCard);
+            }
+
+            if (this.CardsInPlay.Count > 0)
+            {
+                winningPlayer.Hand.AddRange(this.CardsInPlay);
+                this.CardsInPlay.Clear();
             }
         }
     }
