@@ -37,6 +37,20 @@ namespace TopTrumps.Models.Domain
         }
 
         /// <summary>
+        /// Gets the deck.
+        /// </summary>
+        /// <value>
+        /// The deck.
+        /// </value>
+        public Deck Deck
+        {
+            get
+            {
+                return this.deck;
+            }
+        }
+
+        /// <summary>
         /// Gets the players.
         /// </summary>
         /// <value>

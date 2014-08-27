@@ -10,6 +10,8 @@
 namespace TopTrumps.Controllers
 {
     using System.Web.Mvc;
+
+    using TopTrumps.Helpers;
     using TopTrumps.Models.Domain;
     using TopTrumps.Models.ViewModels;
     using TopTrumps.Models.ViewModels.Game;
@@ -83,12 +85,23 @@ namespace TopTrumps.Controllers
         [HttpPost]
         public ActionResult PlayGame(string selectedOption)
         {
-            this.game.CompareCards();
+            var gameLogicHelper = new GameLogicHelper(this.game);
+
+            gameLogicHelper.CompareCards();
 
             if (this.game.GameOver)
             {
                 return this.RedirectToAction("GameOver");
             }
+
+            var gameViewModel = new GameViewModel(this.game.Players);
+
+            return this.View(gameViewModel);
+        }
+
+        public ActionResult CompareCards(string selectedOption)
+        {
+            this.game.CompareCards();
 
             var gameViewModel = new GameViewModel(this.game.Players);
 
