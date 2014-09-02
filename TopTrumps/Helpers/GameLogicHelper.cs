@@ -44,13 +44,23 @@ namespace TopTrumps.Helpers
 
             var cardsToCompare = playersInGame.Select(player => player.Hand.First()).ToList();
 
-            var winningValue = cardsToCompare.Max(x => x.GetType().GetProperty(propertyToCompare).GetValue(x));
+            var winningValue = cardsToCompare.Max(x => x.GetType().GetProperty(propertyToCompare).GetValue(x)).ToString();
 
-            var numberOfWinningCards = cardsToCompare.Select(card => card.GetType().GetProperty(propertyToCompare).GetValue(card)).Count(cardValue => cardValue == winningValue);
+            var numberOfWinningCards = 0;
+
+            foreach (var card in cardsToCompare)
+            {
+                var cardValue = card.GetType().GetProperty(propertyToCompare).GetValue(card).ToString();
+
+                if (cardValue == winningValue)
+                {
+                    numberOfWinningCards ++;
+                }
+            }
 
             if (numberOfWinningCards == 1)
             {
-                var winningCard = cardsToCompare.First(x => x.GetType().GetProperty(propertyToCompare).GetValue(x) == winningValue);
+                var winningCard = cardsToCompare.First(x => x.GetType().GetProperty(propertyToCompare).GetValue(x).ToString() == winningValue);
                 var winningPlayer = this.game.Players.First(x => x.Hand.Contains(winningCard));
 
                 this.SetPlayerInControl(winningPlayer);
