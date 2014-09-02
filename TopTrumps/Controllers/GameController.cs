@@ -80,14 +80,16 @@ namespace TopTrumps.Controllers
         /// <summary>
         /// Plays the game.
         /// </summary>
-        /// <param name="selectedOption">The selected option.</param>
-        /// <returns>The view.</returns>
+        /// <param name="valueToCompare">The value to compare.</param>
+        /// <returns>
+        /// The view.
+        /// </returns>
         [HttpPost]
-        public ActionResult PlayGame(string selectedOption)
+        public ActionResult PlayGame(string valueToCompare)
         {
             var gameLogicHelper = new GameLogicHelper(this.game);
 
-            gameLogicHelper.CompareCards();
+            gameLogicHelper.CompareCards(valueToCompare.Replace(" ", string.Empty));
 
             if (this.game.GameOver)
             {

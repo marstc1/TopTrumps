@@ -9,7 +9,9 @@
 
 namespace TopTrumps.Helpers
 {
+    using System;
     using System.Linq;
+    using System.Reflection;
 
     using TopTrumps.Models.Domain;
 
@@ -31,23 +33,24 @@ namespace TopTrumps.Helpers
         {
             this.game = game;
         }
-        
+
         /// <summary>
         /// Compares the cards.
         /// </summary>
-        public void CompareCards()
+        /// <param name="propertyToCompare">The property to compare.</param>
+        public void CompareCards(string propertyToCompare)
         {
             var playersInGame = this.game.Players.Where(player => !player.IsOut).ToList();
 
             var cardsToCompare = playersInGame.Select(player => player.Hand.First()).ToList();
 
-            var winningValue = cardsToCompare.Max(x => x.Strength);
+            var winningValue = cardsToCompare.Max(x => x.GetType().GetProperty(propertyToCompare).GetValue(x));
 
-            var isWinningCard = cardsToCompare.Count(x => x.Strength == winningValue) == 1;
+            var numberOfWinningCards = cardsToCompare.Select(card => card.GetType().GetProperty(propertyToCompare).GetValue(card)).Count(cardValue => cardValue == winningValue);
 
-            if (isWinningCard)
+            if (numberOfWinningCards == 1)
             {
-                var winningCard = cardsToCompare.First(x => x.Strength == winningValue);
+                var winningCard = cardsToCompare.First(x => x.GetType().GetProperty(propertyToCompare).GetValue(x) == winningValue);
                 var winningPlayer = this.game.Players.First(x => x.Hand.Contains(winningCard));
 
                 this.SetPlayerInControl(winningPlayer);
