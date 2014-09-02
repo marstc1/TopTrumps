@@ -9,11 +9,9 @@
 
 namespace TopTrumps.Helpers
 {
-    using System;
     using System.Linq;
-    using System.Reflection;
 
-    using TopTrumps.Models.Domain;
+    using Models.Domain;
 
     /// <summary>
     /// The game logic class.
@@ -23,7 +21,7 @@ namespace TopTrumps.Helpers
         /// <summary>
         /// The game
         /// </summary>
-        private readonly Game game;
+        private readonly Game _game;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameLogicHelper"/> class.
@@ -31,7 +29,7 @@ namespace TopTrumps.Helpers
         /// <param name="game">The game.</param>
         public GameLogicHelper(Game game)
         {
-            this.game = game;
+            _game = game;
         }
 
         /// <summary>
@@ -40,7 +38,7 @@ namespace TopTrumps.Helpers
         /// <param name="propertyToCompare">The property to compare.</param>
         public void CompareCards(string propertyToCompare)
         {
-            var playersInGame = this.game.Players.Where(player => !player.IsOut).ToList();
+            var playersInGame = _game.Players.Where(player => !player.IsOut).ToList();
 
             var cardsToCompare = playersInGame.Select(player => player.Hand.First()).ToList();
 
@@ -61,11 +59,11 @@ namespace TopTrumps.Helpers
             if (numberOfWinningCards == 1)
             {
                 var winningCard = cardsToCompare.First(x => x.GetType().GetProperty(propertyToCompare).GetValue(x).ToString() == winningValue);
-                var winningPlayer = this.game.Players.First(x => x.Hand.Contains(winningCard));
+                var winningPlayer = _game.Players.First(x => x.Hand.Contains(winningCard));
 
-                this.SetPlayerInControl(winningPlayer);
+                SetPlayerInControl(winningPlayer);
 
-                this.CollectCards(winningPlayer);
+                CollectCards(winningPlayer);
             }
             else
             {
@@ -73,29 +71,7 @@ namespace TopTrumps.Helpers
                 {
                     var playersCard = player.Hand.First();
                     player.Hand.Remove(playersCard);
-                    this.game.CardsInPlay.Add(playersCard);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Deals the cards.
-        /// </summary>
-        private void DealCards()
-        {
-            foreach (var player in this.game.Players)
-            {
-                player.Hand.Clear();
-            }
-
-            while (this.game.Deck.Cards.Any())
-            {
-                foreach (var player in this.game.Players)
-                {
-                    if (this.game.Deck.Cards.Any())
-                    {
-                        player.Hand.Add(this.game.Deck.TakeCard());
-                    }
+                    _game.CardsInPlay.Add(playersCard);
                 }
             }
         }
@@ -106,7 +82,7 @@ namespace TopTrumps.Helpers
         /// <param name="winningPlayer">The winning player.</param>
         private void SetPlayerInControl(Player winningPlayer)
         {
-            foreach (var player in this.game.Players)
+            foreach (var player in _game.Players)
             {
                 player.InControlOfGame = false;
             }
@@ -120,7 +96,7 @@ namespace TopTrumps.Helpers
         /// <param name="winningPlayer">The winning player.</param>
         private void CollectCards(Player winningPlayer)
         {
-            var playersInGame = this.game.Players.Where(player => !player.IsOut).ToList();
+            var playersInGame = _game.Players.Where(player => !player.IsOut).ToList();
 
             foreach (var player in playersInGame)
             {
@@ -129,10 +105,10 @@ namespace TopTrumps.Helpers
                 winningPlayer.Hand.Add(playersCard);
             }
 
-            if (this.game.CardsInPlay.Count > 0)
+            if (_game.CardsInPlay.Count > 0)
             {
-                winningPlayer.Hand.AddRange(this.game.CardsInPlay);
-                this.game.CardsInPlay.Clear();
+                winningPlayer.Hand.AddRange(_game.CardsInPlay);
+                _game.CardsInPlay.Clear();
             }
         }
     }

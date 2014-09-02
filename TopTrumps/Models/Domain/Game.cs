@@ -102,39 +102,6 @@ namespace TopTrumps.Models.Domain
         }
 
         /// <summary>
-        /// Compares the cards.
-        /// </summary>
-        public void CompareCards()
-        {
-            var playersInGame = this.Players.Where(player => !player.IsOut).ToList();
-
-            var cardsToCompare = playersInGame.Select(player => player.Hand.First()).ToList();
-
-            var winningValue = cardsToCompare.Max(x => x.Strength);
-
-            var isWinningCard = cardsToCompare.Count(x => x.Strength == winningValue) == 1;
-
-            if (isWinningCard)
-            {
-                var winningCard = cardsToCompare.First(x => x.Strength == winningValue);
-                var winningPlayer = this.Players.First(x => x.Hand.Contains(winningCard));
-
-                this.SetPlayerInControl(winningPlayer);
-
-                this.CollectCards(winningPlayer);
-            }
-            else
-            {
-                foreach (var player in playersInGame)
-                {
-                    var playersCard = player.Hand.First();
-                    player.Hand.Remove(playersCard);
-                    this.CardsInPlay.Add(playersCard);
-                }
-            }
-        }
-
-        /// <summary>
         /// Deals the cards.
         /// </summary>
         private void DealCards()

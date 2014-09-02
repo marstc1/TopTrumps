@@ -101,15 +101,6 @@ namespace TopTrumps.Controllers
             return this.View(gameViewModel);
         }
 
-        public ActionResult CompareCards(string selectedOption)
-        {
-            this.game.CompareCards();
-
-            var gameViewModel = new GameViewModel(this.game.Players);
-
-            return this.View(gameViewModel);
-        }
-
         /// <summary>
         /// Games the over.
         /// </summary>
