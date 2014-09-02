@@ -77,6 +77,28 @@ namespace TopTrumps.Helpers
         }
 
         /// <summary>
+        /// Deals the cards.
+        /// </summary>
+        private void DealCards()
+        {
+            foreach (var player in _game.Players)
+            {
+                player.Hand.Clear();
+            }
+
+            while (_game.Deck.Cards.Any())
+            {
+                foreach (var player in _game.Players)
+                {
+                    if (_game.Deck.Cards.Any())
+                    {
+                        player.Hand.Add(_game.Deck.TakeCard());
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets the player in control.
         /// </summary>
         /// <param name="winningPlayer">The winning player.</param>

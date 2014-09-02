@@ -11,19 +11,20 @@
     var path = string.Format("/Images/Cards/{0}/{1}.jpg", @Model.PlayersCurrentCard.PackId, @Model.PlayersCurrentCard.Name.Replace(" ", "").ToLower());
     
     <img src="@path" class="card" />
-    
+
     <div>
-    
+    @if (Model.PlayerInControl)
+    {
         <input type="submit" name="valueToCompare" value="Strength" />
-    
         <input type="submit" name="valueToCompare" value="Skill" />
-    
         <input type="submit" name="valueToCompare" value="Magical Force" />
-    
         <input type="submit" name="valueToCompare" value="Weapons" />
-    
         <input type="submit" name="valueToCompare" value="Power" />
-        
+    }
+    else
+    {
+        <input type="submit" value="Go!"/>
+    }
     </div>
     
     <h1>Computer (@Model.ComputersNumberOfCards)</h1>

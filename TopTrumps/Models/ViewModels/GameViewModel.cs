@@ -17,13 +17,16 @@
 
         public int ComputersNumberOfCards { get; set; }
 
-        public GameViewModel(List<Player> players)
-        {
-            this.PlayersName = players[1].Name;
-            this.PlayersNumberOfCards = players[1].Hand.Count;
-            this.PlayersCurrentCard = players[1].Hand.FirstOrDefault();
+        public bool PlayerInControl { get; set; }
 
-            this.ComputersNumberOfCards = players[0].Hand.Count;
+        public GameViewModel(IReadOnlyList<Player> players)
+        {
+            PlayersName = players[1].Name;
+            PlayersNumberOfCards = players[1].Hand.Count;
+            PlayersCurrentCard = players[1].Hand.FirstOrDefault();
+            PlayerInControl = players[1].InControlOfGame;
+
+            ComputersNumberOfCards = players[0].Hand.Count;
         }
     }
 }

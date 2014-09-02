@@ -120,6 +120,8 @@ namespace TopTrumps.Models.Domain
                         player.Hand.Add(this.deck.TakeCard());
                     }
                 }
+
+                players[1].InControlOfGame = true;
             }
         }
 
