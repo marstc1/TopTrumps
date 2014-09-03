@@ -192,6 +192,7 @@
     </Compile>
     <Compile Include="Helpers\GameLogicHelper.cs" />
     <Compile Include="Helpers\PackHelper.cs" />
+    <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Domain\Card.cs" />
     <Compile Include="Models\Domain\Deck.cs" />

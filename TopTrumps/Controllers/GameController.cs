@@ -98,7 +98,18 @@ namespace TopTrumps.Controllers
 
             var gameViewModel = new GameViewModel(this.game.Players);
 
-            return this.View(gameViewModel);
+            return this.View("PlayGame", gameViewModel);
+        }
+
+        /// <summary>
+        /// Takes the Computers turn.
+        /// </summary>
+        /// <returns>The PlayGame view after selecting the computers go</returns>
+        public ActionResult ComputersTurn()
+        {
+            var computersChoice = "Strength";
+
+            return this.PlayGame(computersChoice);
         }
 
         /// <summary>
@@ -116,7 +127,7 @@ namespace TopTrumps.Controllers
         /// <param name="filterContext">Information about the current request and action.</param>
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            this.game = this.GetGameData();
+            this.game = SessionHelper.GetGameData(this.HttpContext);
             
             base.OnActionExecuting(filterContext);
         }
@@ -127,37 +138,9 @@ namespace TopTrumps.Controllers
         /// <param name="filterContext">Information about the current request and action.</param>
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            this.SaveGameData(this.game);
+            SessionHelper.SaveGameData(this.HttpContext, this.game);
             
             base.OnActionExecuted(filterContext);
-        }
-
-        /// <summary>
-        /// Saves the game data.
-        /// </summary>
-        /// <param name="gameData">The game data.</param>
-        private void SaveGameData(Game gameData)
-        {
-            if (this.HttpContext.Session != null)
-            {
-                this.HttpContext.Session["gameData"] = gameData;
-            }
-        }
-
-        /// <summary>
-        /// Gets the game data.
-        /// </summary>
-        /// <returns>The saved game data from session.</returns>
-        private Game GetGameData()
-        {
-            if (this.HttpContext.Session == null)
-            {
-                return new Game();
-            }
-
-            var gameData = (Game)this.HttpContext.Session["gameData"];
-
-            return gameData ?? new Game();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace TopTrumps.Helpers
 
                 if (cardValue == winningValue)
                 {
-                    numberOfWinningCards ++;
+                    numberOfWinningCards++;
                 }
             }
 
