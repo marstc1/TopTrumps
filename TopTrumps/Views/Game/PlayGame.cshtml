@@ -4,28 +4,33 @@
     ViewBag.Title = "NewGame";
 }
 
-@using (Html.BeginForm(IsPost))
-{  
+ 
     <h1>@Model.PlayersName (@Model.PlayersNumberOfCards)</h1>
     
-    var path = string.Format("/Images/Cards/{0}/{1}.jpg", @Model.PlayersCurrentCard.PackId, @Model.PlayersCurrentCard.Name.Replace(" ", "").ToLower());
+    @{ var path = string.Format("/Images/Cards/{0}/{1}.jpg", @Model.PlayersCurrentCard.PackId, @Model.PlayersCurrentCard.Name.Replace(" ", "").ToLower()); }
     
     <img src="@path" class="card" />
 
     <div>
     @if (Model.PlayerInControl)
     {
-        <input type="submit" name="valueToCompare" value="Strength" />
-        <input type="submit" name="valueToCompare" value="Skill" />
-        <input type="submit" name="valueToCompare" value="Magical Force" />
-        <input type="submit" name="valueToCompare" value="Weapons" />
-        <input type="submit" name="valueToCompare" value="Power" />
+        using (Html.BeginForm("PlayGame", "Game", FormMethod.Post))
+         {
+             <input type="submit" name="valueToCompare" value="Strength" />
+             <input type="submit" name="valueToCompare" value="Skill" />
+             <input type="submit" name="valueToCompare" value="Magical Force" />
+             <input type="submit" name="valueToCompare" value="Weapons" />
+             <input type="submit" name="valueToCompare" value="Power" />
+         }
     }
     else
     {
         @Html.ActionLink("Go","ComputersTurn");
+        
+        var cpuCardPath = string.Format("/Images/Cards/{0}/{1}.jpg", @Model.ComputersCurrentCard.PackId, @Model.ComputersCurrentCard.Name.Replace(" ", "").ToLower());
+        
+        <img src="@cpuCardPath" class="card" />
     }
     </div>
     
     <h1>Computer (@Model.ComputersNumberOfCards)</h1>
-}

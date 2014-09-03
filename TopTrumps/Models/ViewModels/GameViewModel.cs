@@ -17,6 +17,8 @@
 
         public int ComputersNumberOfCards { get; set; }
 
+        public Card ComputersCurrentCard { get; set; }
+
         public bool PlayerInControl { get; set; }
 
         public GameViewModel(IReadOnlyList<Player> players)
@@ -27,6 +29,7 @@
             PlayerInControl = players[1].InControlOfGame;
 
             ComputersNumberOfCards = players[0].Hand.Count;
+            ComputersCurrentCard = players[0].Hand.FirstOrDefault();
         }
     }
 }

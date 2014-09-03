@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace TopTrumps.Controllers
 {
     using System.Web.Mvc;
@@ -107,7 +109,13 @@ namespace TopTrumps.Controllers
         /// <returns>The PlayGame view after selecting the computers go</returns>
         public ActionResult ComputersTurn()
         {
-            var computersChoice = "Strength";
+            var values = Enum.GetValues(typeof (CardStats));
+
+            var random = new Random();
+
+            var randomValue = (CardStats)values.GetValue(random.Next(values.Length));
+            
+            var computersChoice = randomValue.ToString().Replace(" ", string.Empty);
 
             return this.PlayGame(computersChoice);
         }
